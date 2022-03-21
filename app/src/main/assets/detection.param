@@ -1,0 +1,137 @@
+7767517
+135 155
+Input                    input                    0 1 input
+Convolution              Conv__357                1 1 input re_lu_0 0=24 1=3 3=2 4=1 5=1 6=648 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__358                1 1 re_lu_0 re_lu_1 0=24 1=3 4=1 5=1 6=216 7=24 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__359                1 1 re_lu_1 Conv__359:0 0=16 1=1 5=1 6=384
+Convolution              Conv__360                1 1 Conv__359:0 re_lu_2 0=64 1=1 5=1 6=1024 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__361                1 1 re_lu_2 re_lu_3 0=64 1=3 3=2 4=1 5=1 6=576 7=64 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__362                1 1 re_lu_3 Conv__362:0 0=24 1=1 5=1 6=1536
+Split                    splitncnn_0              1 2 Conv__362:0 Conv__362:0_splitncnn_0 Conv__362:0_splitncnn_1
+Convolution              Conv__365                1 1 Conv__362:0_splitncnn_1 re_lu_4 0=144 1=1 5=1 6=3456 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__366                1 1 re_lu_4 re_lu_5 0=144 1=3 4=1 5=1 6=1296 7=144 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__367                1 1 re_lu_5 Conv__367:0 0=24 1=1 5=1 6=3456
+BinaryOp                 add_0                    2 1 Conv__367:0 Conv__362:0_splitncnn_0 add_0:0
+Convolution              Conv__368                1 1 add_0:0 re_lu_6 0=144 1=1 5=1 6=3456 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__369                1 1 re_lu_6 re_lu_7 0=144 1=5 3=2 4=2 5=1 6=3600 7=144 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__370                1 1 re_lu_7 Conv__370:0 0=40 1=1 5=1 6=5760
+Split                    splitncnn_1              1 2 Conv__370:0 Conv__370:0_splitncnn_0 Conv__370:0_splitncnn_1
+Convolution              Conv__373                1 1 Conv__370:0_splitncnn_1 re_lu_8 0=240 1=1 5=1 6=9600 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__374                1 1 re_lu_8 re_lu_9 0=240 1=5 4=2 5=1 6=6000 7=240 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__375                1 1 re_lu_9 Conv__375:0 0=40 1=1 5=1 6=9600
+BinaryOp                 add_1                    2 1 Conv__375:0 Conv__370:0_splitncnn_0 add_1:0
+Split                    splitncnn_2              1 2 add_1:0 add_1:0_splitncnn_0 add_1:0_splitncnn_1
+ConvolutionDepthWise     depthwise_5              1 1 add_1:0_splitncnn_1 depthwise_5:0 0=40 1=3 4=1 6=360 7=40
+Convolution              Conv__376                1 1 depthwise_5:0 activation_5 0=96 1=1 5=1 6=3840 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__381                1 1 add_1:0_splitncnn_0 re_lu_10 0=240 1=1 5=1 6=9600 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__382                1 1 re_lu_10 re_lu_11 0=240 1=3 3=2 4=1 5=1 6=2160 7=240 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__383                1 1 re_lu_11 Conv__383:0 0=80 1=1 5=1 6=19200
+Split                    splitncnn_3              1 2 Conv__383:0 Conv__383:0_splitncnn_0 Conv__383:0_splitncnn_1
+Convolution              Conv__386                1 1 Conv__383:0_splitncnn_1 re_lu_12 0=480 1=1 5=1 6=38400 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__387                1 1 re_lu_12 re_lu_13 0=480 1=3 4=1 5=1 6=4320 7=480 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__388                1 1 re_lu_13 Conv__388:0 0=80 1=1 5=1 6=38400
+BinaryOp                 add_2                    2 1 Conv__388:0 Conv__383:0_splitncnn_0 add_2:0
+Split                    splitncnn_4              1 2 add_2:0 add_2:0_splitncnn_0 add_2:0_splitncnn_1
+Convolution              Conv__391                1 1 add_2:0_splitncnn_1 re_lu_14 0=480 1=1 5=1 6=38400 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__392                1 1 re_lu_14 re_lu_15 0=480 1=3 4=1 5=1 6=4320 7=480 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__393                1 1 re_lu_15 Conv__393:0 0=80 1=1 5=1 6=38400
+BinaryOp                 add_3                    2 1 Conv__393:0 add_2:0_splitncnn_0 add_3:0
+Convolution              Conv__394                1 1 add_3:0 re_lu_16 0=480 1=1 5=1 6=38400 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__395                1 1 re_lu_16 re_lu_17 0=480 1=5 4=2 5=1 6=12000 7=480 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__396                1 1 re_lu_17 Conv__396:0 0=112 1=1 5=1 6=53760
+Split                    splitncnn_5              1 2 Conv__396:0 Conv__396:0_splitncnn_0 Conv__396:0_splitncnn_1
+Convolution              Conv__399                1 1 Conv__396:0_splitncnn_1 re_lu_18 0=672 1=1 5=1 6=75264 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__400                1 1 re_lu_18 re_lu_19 0=672 1=5 4=2 5=1 6=16800 7=672 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__401                1 1 re_lu_19 Conv__401:0 0=112 1=1 5=1 6=75264
+BinaryOp                 add_4                    2 1 Conv__401:0 Conv__396:0_splitncnn_0 add_4:0
+Split                    splitncnn_6              1 2 add_4:0 add_4:0_splitncnn_0 add_4:0_splitncnn_1
+Convolution              Conv__404                1 1 add_4:0_splitncnn_1 re_lu_20 0=672 1=1 5=1 6=75264 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__405                1 1 re_lu_20 re_lu_21 0=672 1=5 4=2 5=1 6=16800 7=672 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__406                1 1 re_lu_21 Conv__406:0 0=112 1=1 5=1 6=75264
+BinaryOp                 add_5                    2 1 Conv__406:0 add_4:0_splitncnn_0 add_5:0
+Split                    splitncnn_7              1 2 add_5:0 add_5:0_splitncnn_0 add_5:0_splitncnn_1
+ConvolutionDepthWise     depthwise_12             1 1 add_5:0_splitncnn_1 depthwise_12:0 0=112 1=3 4=1 6=1008 7=112
+Convolution              Conv__407                1 1 depthwise_12:0 activation_1 0=192 1=1 5=1 6=21504 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__412                1 1 add_5:0_splitncnn_0 re_lu_22 0=672 1=1 5=1 6=75264 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__413                1 1 re_lu_22 re_lu_23 0=672 1=5 3=2 4=2 5=1 6=16800 7=672 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__414                1 1 re_lu_23 Conv__414:0 0=192 1=1 5=1 6=129024
+Split                    splitncnn_8              1 2 Conv__414:0 Conv__414:0_splitncnn_0 Conv__414:0_splitncnn_1
+Convolution              Conv__417                1 1 Conv__414:0_splitncnn_1 re_lu_24 0=1152 1=1 5=1 6=221184 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__418                1 1 re_lu_24 re_lu_25 0=1152 1=5 4=2 5=1 6=28800 7=1152 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__419                1 1 re_lu_25 Conv__419:0 0=192 1=1 5=1 6=221184
+BinaryOp                 add_6                    2 1 Conv__419:0 Conv__414:0_splitncnn_0 add_6:0
+Split                    splitncnn_9              1 2 add_6:0 add_6:0_splitncnn_0 add_6:0_splitncnn_1
+Convolution              Conv__422                1 1 add_6:0_splitncnn_1 re_lu_26 0=1152 1=1 5=1 6=221184 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__423                1 1 re_lu_26 re_lu_27 0=1152 1=5 4=2 5=1 6=28800 7=1152 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__424                1 1 re_lu_27 Conv__424:0 0=192 1=1 5=1 6=221184
+BinaryOp                 add_7                    2 1 Conv__424:0 add_6:0_splitncnn_0 add_7:0
+Split                    splitncnn_10             1 2 add_7:0 add_7:0_splitncnn_0 add_7:0_splitncnn_1
+Convolution              Conv__427                1 1 add_7:0_splitncnn_1 re_lu_28 0=1152 1=1 5=1 6=221184 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__428                1 1 re_lu_28 re_lu_29 0=1152 1=5 4=2 5=1 6=28800 7=1152 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              Conv__429                1 1 re_lu_29 Conv__429:0 0=192 1=1 5=1 6=221184
+BinaryOp                 add_8                    2 1 Conv__429:0 add_7:0_splitncnn_0 add_8:0
+Convolution              Conv__430                1 1 add_8:0 re_lu_30 0=1152 1=1 5=1 6=221184 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     Conv__431                1 1 re_lu_30 re_lu_31 0=1152 1=3 4=1 5=1 6=10368 7=1152 9=3 -23310=2,0.000000e+00,6.000000e+00
+Split                    splitncnn_11             1 2 re_lu_31 re_lu_31_splitncnn_0 re_lu_31_splitncnn_1
+PixelShuffle             d2sp_person_32           1 1 re_lu_31_splitncnn_1 d2sp_person_32:0 0=2 1=1
+Padding                  zero_padding2d_7         1 1 d2sp_person_32:0 zero_padding2d_7:0 0=1 1=1 2=1 3=1
+Split                    splitncnn_12             1 2 zero_padding2d_7:0 zero_padding2d_7:0_splitncnn_0 zero_padding2d_7:0_splitncnn_1
+ConvolutionDepthWise     depthwise_27             1 1 zero_padding2d_7:0_splitncnn_1 depthwise_27:0 0=288 1=3 3=2 6=2592 7=288
+Convolution              Conv2D_44                1 1 depthwise_27:0 Conv2D_44:0 0=72 1=1 6=20736
+Permute                  Conv2D_44__347           1 1 Conv2D_44:0 Conv2D_44__347:0 0=3
+Reshape                  reshaped_regressor_person_32 1 1 Conv2D_44__347:0 reshaped_regressor_person_32:0 0=12 1=-1
+ConvolutionDepthWise     Conv__436                1 1 zero_padding2d_7:0_splitncnn_0 Conv__436:0 0=288 1=3 3=2 5=1 6=2592 7=288
+Convolution              Conv__437                1 1 Conv__436:0 Conv__437:0 0=6 1=1 5=1 6=1728
+Permute                  Conv2D_43__355           1 1 Conv__437:0 Conv2D_43__355:0 0=3
+Reshape                  reshaped_classifier_person_32 1 1 Conv2D_43__355:0 reshaped_classifier_person_32:0 0=1 1=-1
+Interp                   Resize__245              1 1 re_lu_31_splitncnn_0 Resize__245:0 0=2 3=14 4=14
+Convolution              Conv__438                1 1 Resize__245:0 activation_0 0=192 1=1 5=1 6=221184 9=3 -23310=2,0.000000e+00,6.000000e+00
+BinaryOp                 add_9                    2 1 activation_1 activation_0 add_9:0
+Split                    splitncnn_13             1 2 add_9:0 add_9:0_splitncnn_0 add_9:0_splitncnn_1
+ConvolutionDepthWise     depthwise_18             1 1 add_9:0_splitncnn_1 depthwise_18:0 0=192 1=3 4=1 6=1728 7=192
+Convolution              Conv__443                1 1 depthwise_18:0 Conv__443:0 0=192 1=1 5=1 6=36864
+BinaryOp                 Add_35                   2 1 add_9:0_splitncnn_0 Conv__443:0 Add_35:0
+Clip                     activation_2             1 1 Add_35:0 activation_2:0 0=0.000000e+00 1=6.000000e+00
+Split                    splitncnn_14             1 2 activation_2:0 activation_2:0_splitncnn_0 activation_2:0_splitncnn_1
+ConvolutionDepthWise     depthwise_19             1 1 activation_2:0_splitncnn_1 depthwise_19:0 0=192 1=3 4=1 6=1728 7=192
+Convolution              Conv__446                1 1 depthwise_19:0 Conv__446:0 0=192 1=1 5=1 6=36864
+BinaryOp                 Add_36                   2 1 activation_2:0_splitncnn_0 Conv__446:0 Add_36:0
+Clip                     activation_3             1 1 Add_36:0 activation_3:0 0=0.000000e+00 1=6.000000e+00
+Split                    splitncnn_15             1 2 activation_3:0 activation_3:0_splitncnn_0 activation_3:0_splitncnn_1
+PixelShuffle             d2sp_person_16           1 1 activation_3:0_splitncnn_1 d2sp_person_16:0 0=2 1=1
+Padding                  zero_padding2d_6         1 1 d2sp_person_16:0 zero_padding2d_6:0 0=1 1=1 2=1 3=1
+Split                    splitncnn_16             1 2 zero_padding2d_6:0 zero_padding2d_6:0_splitncnn_0 zero_padding2d_6:0_splitncnn_1
+ConvolutionDepthWise     Conv__455                1 1 zero_padding2d_6:0_splitncnn_1 Conv__455:0 0=48 1=3 3=2 5=1 6=432 7=48
+Convolution              Conv__456                1 1 Conv__455:0 Conv__456:0 0=2 1=1 5=1 6=96
+Permute                  Conv2D_41__336           1 1 Conv__456:0 Conv2D_41__336:0 0=3
+Reshape                  reshaped_classifier_person_16 1 1 Conv2D_41__336:0 reshaped_classifier_person_16:0 0=1 1=-1
+ConvolutionDepthWise     Conv__453                1 1 zero_padding2d_6:0_splitncnn_0 Conv__453:0 0=48 1=3 3=2 5=1 6=432 7=48
+Convolution              Conv__454                1 1 Conv__453:0 Conv__454:0 0=24 1=1 5=1 6=1152
+Permute                  Conv2D_42__328           1 1 Conv__454:0 Conv2D_42__328:0 0=3
+Reshape                  reshaped_regressor_person_16 1 1 Conv2D_42__328:0 reshaped_regressor_person_16:0 0=12 1=-1
+Interp                   Resize__277              1 1 activation_3:0_splitncnn_0 Resize__277:0 0=2 3=28 4=28
+Convolution              Conv__457                1 1 Resize__277:0 activation_4 0=96 1=1 5=1 6=18432 9=3 -23310=2,0.000000e+00,6.000000e+00
+BinaryOp                 add_12                   2 1 activation_5 activation_4 add_12:0
+Split                    splitncnn_17             1 2 add_12:0 add_12:0_splitncnn_0 add_12:0_splitncnn_1
+ConvolutionDepthWise     depthwise_20             1 1 add_12:0_splitncnn_1 depthwise_20:0 0=96 1=3 4=1 6=864 7=96
+Convolution              Conv__462                1 1 depthwise_20:0 Conv__462:0 0=96 1=1 5=1 6=9216
+BinaryOp                 Add_38                   2 1 add_12:0_splitncnn_0 Conv__462:0 Add_38:0
+Clip                     activation_6             1 1 Add_38:0 activation_6:0 0=0.000000e+00 1=6.000000e+00
+Split                    splitncnn_18             1 2 activation_6:0 activation_6:0_splitncnn_0 activation_6:0_splitncnn_1
+ConvolutionDepthWise     depthwise_21             1 1 activation_6:0_splitncnn_1 depthwise_21:0 0=96 1=3 4=1 6=864 7=96
+Convolution              Conv__465                1 1 depthwise_21:0 Conv__465:0 0=96 1=1 5=1 6=9216
+BinaryOp                 Add_39                   2 1 activation_6:0_splitncnn_0 Conv__465:0 Add_39:0
+Clip                     activation_7             1 1 Add_39:0 activation_7:0 0=0.000000e+00 1=6.000000e+00
+PixelShuffle             d2sp_person_8            1 1 activation_7:0 d2sp_person_8:0 0=2 1=1
+Padding                  zero_padding2d_5         1 1 d2sp_person_8:0 zero_padding2d_5:0 0=1 1=1 2=1 3=1
+Split                    splitncnn_19             1 2 zero_padding2d_5:0 zero_padding2d_5:0_splitncnn_0 zero_padding2d_5:0_splitncnn_1
+ConvolutionDepthWise     Conv__474                1 1 zero_padding2d_5:0_splitncnn_1 Conv__474:0 0=24 1=3 3=2 5=1 6=216 7=24
+Convolution              Conv__475                1 1 Conv__474:0 Conv__475:0 0=2 1=1 5=1 6=48
+Permute                  Conv2D_39__317           1 1 Conv__475:0 Conv2D_39__317:0 0=3
+Reshape                  reshaped_classifier_person_8 1 1 Conv2D_39__317:0 reshaped_classifier_person_8:0 0=1 1=-1
+Concat                   Identity_1               3 1 reshaped_classifier_person_8:0 reshaped_classifier_person_16:0 reshaped_classifier_person_32:0 cls
+ConvolutionDepthWise     Conv__472                1 1 zero_padding2d_5:0_splitncnn_0 Conv__472:0 0=24 1=3 3=2 5=1 6=216 7=24
+Convolution              Conv__473                1 1 Conv__472:0 Conv__473:0 0=24 1=1 5=1 6=576
+Permute                  Conv2D_40__309           1 1 Conv__473:0 Conv2D_40__309:0 0=3
+Reshape                  reshaped_regressor_person_8 1 1 Conv2D_40__309:0 reshaped_regressor_person_8:0 0=12 1=-1
+Concat                   Identity                 3 1 reshaped_regressor_person_8:0 reshaped_regressor_person_16:0 reshaped_regressor_person_32:0 reg
