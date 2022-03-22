@@ -17,12 +17,17 @@
 
 #include <opencv2/core/core.hpp>
 #include <net.h>
-
+struct Keypoint{
+    float x;
+    float y;
+    bool visibility;
+    Keypoint(float x,float y,bool visibility):x(x),y(y),visibility(visibility){}
+};
 class LandmarkDetect
 {
 public:
     int load(AAssetManager* mgr, const char* modeltype, bool use_gpu = false);
-    float detect(const cv::Mat& rgb, const cv::Mat& trans_mat, std::vector<cv::Point2f> &landmarks);
+    float detect(const cv::Mat& rgb, const cv::Mat& trans_mat, std::vector<Keypoint> &landmarks);
 
 private:
     ncnn::Net landmark;

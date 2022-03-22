@@ -48,7 +48,7 @@ int LandmarkDetect::load(AAssetManager* mgr, const char* modeltype, bool use_gpu
 
     return 0;
 }
-static void getOriginalCoord(const std::vector<cv::Point2f>& keypoints, const cv::Mat& trans_mat, std::vector<cv::Point2f>& trans_points)
+static void getOriginalCoord(const std::vector<Keypoint>& keypoints, const cv::Mat& trans_mat, std::vector<Keypoint>& trans_points)
 {
     cv::Mat trans_mat_inv;
     cv::invertAffineTransform(trans_mat, trans_mat_inv);
@@ -61,11 +61,11 @@ static void getOriginalCoord(const std::vector<cv::Point2f>& keypoints, const cv
         x = kpt.x * trans_mat_inv.at<double>(0, 0) + kpt.y * trans_mat_inv.at<double>(0, 1) + trans_mat_inv.at<double>(0, 2);
         y = kpt.x * trans_mat_inv.at<double>(1, 0) + kpt.y * trans_mat_inv.at<double>(1, 1) + trans_mat_inv.at<double>(1, 2);
 
-        trans_points.push_back(cv::Point2f(x,y));
+        trans_points.push_back(Keypoint(x,y,kpt.visibility));
     }
 
 }
-static void decodeKeypoints(const ncnn::Mat& id_3d, int img_w, int img_h, std::vector<cv::Point2f>& keypoints)
+static void decodeKeypoints(const ncnn::Mat& id_3d, int img_w, int img_h, std::vector<Keypoint>& keypoints)
 {
     const int num_kpt = 39;
     const int num_kpt_offset = id_3d.total() / num_kpt;
@@ -73,12 +73,16 @@ static void decodeKeypoints(const ncnn::Mat& id_3d, int img_w, int img_h, std::v
     {
         float pt_x = id_3d[i * num_kpt_offset] * img_w / 256;
         float pt_y = id_3d[i * num_kpt_offset + 1] * img_h / 256;
-        keypoints.push_back(cv::Point2f(pt_x, pt_y));
+        //1.for whole body,all points is visible
+        bool visibility = true;
+        //2.for half body or occluded,make some points invisible
+        //bool visibility = id_3d[i*num_kpt_offset+3] > 0.1 && id_3d[i*num_kpt_offset+4] > 0.3 ? true : false;
+        keypoints.push_back(Keypoint(pt_x, pt_y, visibility));
     }
 }
 
 
-float LandmarkDetect::detect(const cv::Mat& rgb,const cv::Mat& trans_mat, std::vector<cv::Point2f> &landmarks)
+float LandmarkDetect::detect(const cv::Mat& rgb,const cv::Mat& trans_mat, std::vector<Keypoint> &landmarks)
 {
     cv::Mat input = rgb.clone();
 
@@ -95,7 +99,7 @@ float LandmarkDetect::detect(const cv::Mat& rgb,const cv::Mat& trans_mat, std::v
         return -1.f;
     ex.extract("ld_3d", id_3d);
     //ex.extract("seg", seg);
-    std::vector<cv::Point2f> keypoints;
+    std::vector<Keypoint> keypoints;
     decodeKeypoints(id_3d, rgb.cols, rgb.rows, keypoints);
 
     getOriginalCoord(keypoints, trans_mat, landmarks);

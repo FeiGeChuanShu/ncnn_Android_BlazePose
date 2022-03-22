@@ -471,6 +471,31 @@ static void getTransMatrix(const cv::Point2f* org_pts, int target_size, cv::Mat&
 
     trans_mat = cv::getAffineTransform(srcPts, dstPts);
 }
+void BlazePose::smoothingLandmarks(std::vector<Keypoint>& detects, int img_w,int img_h)
+{
+    Normalized2DLandmarkList landmarks;
+    for (auto& kpt : detects)
+    {
+        Normalized2DLandmark pt;
+        pt.first = kpt.x / img_w;
+        pt.second = kpt.y / img_h;
+        landmarks.push_back(pt);
+    }
+
+    auto image_size = std::make_pair(img_h, img_w);
+    Normalized2DLandmarkList out_landmarks;
+    velocity_landmark_filter->Apply2D(landmarks, image_size, Now(), &out_landmarks);
+    //one_euro_landmark_filter->Apply2D(landmarks, image_size, Now(), &out_landmarks);
+    if (out_landmarks.size() > 0)
+    {
+        for (size_t i = 0; i < out_landmarks.size(); i++)
+        {
+            detects[i].x = out_landmarks[i].first * img_w;
+            detects[i].y = out_landmarks[i].second * img_h;
+        }
+    }
+}
+
 int BlazePose::detect(const cv::Mat& rgb, std::vector<Object>& objects)
 {
     ncnn::Mat img_tensor;
@@ -497,6 +522,7 @@ int BlazePose::detect(const cv::Mat& rgb, std::vector<Object>& objects)
         cv::warpAffine(rgb, obj.trans_image, trans_mat, cv::Size(256, 256), 1, 0);
         float prob = pose_landmark.detect(obj.trans_image, trans_mat, obj.skeleton);
         obj.score = prob;
+        smoothingLandmarks(obj.skeleton, rgb.cols, rgb.rows);
     }
     return 0;
 }
@@ -531,6 +557,10 @@ int BlazePose::load(AAssetManager* mgr, const char* modeltype, bool use_gpu)
     pose_landmark.load(mgr, modeltype);
 
     createAnchors(224, 224, anchors);
+
+    velocity_landmark_filter = std::make_shared<VelocityFilter>(window_size, velocity_scale, min_allowed_object_scale, 30);
+    //one_euro_landmark_filter = std::make_shared<OneEuroFilterImpl>(frequency, min_cutoff, beta, derivate_cutoff, min_allowed_object_scale, disable_value_scaling);
+
     return 0;
 }
 
@@ -543,33 +573,52 @@ int BlazePose::draw(cv::Mat& rgb, const std::vector<Object>& objects)
             continue;
         for (size_t i = 0; i < 33; i++)
         {
-            cv::Point2f kpt = obj.skeleton[i];
-            cv::circle(rgb, cv::Point(kpt.x, kpt.y), 2, cv::Scalar(255, 255, 255), -1);
+            Keypoint kpt = obj.skeleton[i];
+            if(kpt.visibility)
+                cv::circle(rgb, cv::Point(kpt.x, kpt.y), 2, cv::Scalar(255, 255, 255), -1);
         }
         for(const auto& line : lines)
         {
-            cv::line(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y),
-                cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y), cv::Scalar(255, 255, 255), 2, 8, 0);
+            if(obj.skeleton[line.first].visibility && obj.skeleton[line.second].visibility)
+                cv::line(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y),
+                    cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y),
+                    cv::Scalar(255, 255, 255), 2, 8, 0);
         }
         
         for (const auto& line : extended_lines_fb)
         {
-            cv::line(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y),
-                cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y), cv::Scalar(255, 255, 255), 2, 8, 0);
+            if(obj.skeleton[line.first].visibility && obj.skeleton[line.second].visibility)
+                cv::line(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y),
+                cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y),
+                cv::Scalar(255, 255, 255), 2, 8, 0);
         }
         for (const auto& line : left_body)
         {
-            cv::line(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y),
-                     cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y), cv::Scalar(255, 138, 0), 1, cv::LINE_AA, 0);
-            cv::circle(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y), 3, cv::Scalar(255, 138, 0), 1, cv::LINE_AA, 0);
-            cv::circle(rgb, cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y), 3, cv::Scalar(255, 138, 0), 1, cv::LINE_AA, 0);
+            if(obj.skeleton[line.first].visibility && obj.skeleton[line.second].visibility)
+            {
+                cv::line(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y),
+                         cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y),
+                         cv::Scalar(255, 138, 0), 1, cv::LINE_AA, 0);
+                cv::circle(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y), 3,
+                        cv::Scalar(255, 138, 0), 1, cv::LINE_AA, 0);
+                cv::circle(rgb, cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y), 3,
+                        cv::Scalar(255, 138, 0), 1, cv::LINE_AA, 0);
+            }
+
         }
         for (const auto& line : right_body)
         {
-            cv::line(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y),
-                     cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y), cv::Scalar(0, 217, 231), 1, cv::LINE_AA, 0);
-            cv::circle(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y), 3, cv::Scalar(0, 217, 231), 1, cv::LINE_AA, 0);
-            cv::circle(rgb, cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y), 3, cv::Scalar(0, 217, 231), 1, cv::LINE_AA, 0);
+            if(obj.skeleton[line.first].visibility && obj.skeleton[line.second].visibility)
+            {
+                cv::line(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y),
+                         cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y),
+                         cv::Scalar(0, 217, 231), 1, cv::LINE_AA, 0);
+                cv::circle(rgb, cv::Point(obj.skeleton[line.first].x, obj.skeleton[line.first].y), 3,
+                        cv::Scalar(0, 217, 231), 1, cv::LINE_AA, 0);
+                cv::circle(rgb, cv::Point(obj.skeleton[line.second].x, obj.skeleton[line.second].y), 3,
+                        cv::Scalar(0, 217, 231), 1, cv::LINE_AA, 0);
+            }
+
         }
         /*cv::circle(rgb, obj.landmarks[0], 2, cv::Scalar(0, 0, 255), -1);
         cv::circle(rgb, obj.landmarks[1], 2, cv::Scalar(0, 255, 0), -1);
