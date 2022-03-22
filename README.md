@@ -24,7 +24,8 @@ https://github.com/nihui/opencv-mobile
 ### step3
 * Open this project with Android Studio, build it and enjoy!
 ## result  
-![](result.gif)  
+![](result.gif) 
+![](result_smoothing.gif)  
 ## reference:  
 https://github.com/nihui/ncnn-android-nanodet  
 https://google.github.io/mediapipe/solutions/pose  
